@@ -17,9 +17,46 @@
 
 {% for page in site.pages_list %}
   &nbsp;&nbsp;&nbsp;
-  <small><a href="{{ page[1]  }}">{{ page[0] }}</a></small>
-{% endfor %}
+          <small><a href="{{ page[1]  }}">{{ page[0] }}</a><span id="emoji"></span></small>
+{% endfor %} 
 </h3>
+        
+        <!-- FOR EMOJI on top nav bar -->
+        <script> 
+              var emojis = [
+      '🦀',
+      '❤',
+      '♫',
+      '🍂',
+      '🐼',
+      '🐧',
+      '🐢',
+      '🐁',
+      '🐻',
+      '🧀',
+      '🍉',
+      '🍆',
+      '🦒',
+      '🌴',
+      '🌳',
+      '🌨',
+      '🌊',
+      '🎋',
+      '🎍',
+      '☃️',
+      '☔️',
+      '🌎',
+      '🍄',
+      '🐠',
+    ];
+          
+          
+          var elem = document.getElementById('emoji');
+          
+          if (elem) {
+           elem.innerHTML = options[Math.floor(Math.random() * options.length)]; 
+          }
+        </script>
       </header>
 
       <main>
