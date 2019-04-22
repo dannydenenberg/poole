@@ -5,9 +5,9 @@ permalink:           pretty
 repo:                dannydenenberg/poole
 
 # Setup
-title:               Poole
+title:               Danny Denenberg
 tagline:             The Jekyll Butler
-url:                 http://getpoole.com
+url:                 http://asdfj.net
 paginate:            1
 baseurl:             ""
 
@@ -20,9 +20,9 @@ sass:
 
 # About/contact
 author:
-  name:              Mark Otto
-  url:               https://twitter.com/mdo
-  email:             markdotto@gmail.com
+  name:              Danny Denenberg
+  url:               https://twitter.com/denenbergdanny
+  email:             dannydenenberg@gmail.com
 
 # pages shown on nav bar
 pages_list:       
