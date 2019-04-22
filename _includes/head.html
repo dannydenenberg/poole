@@ -9,6 +9,14 @@
       {{ page.title }} &middot; {{ site.title }}
     {% endif %}
   </title>
+  
+  <!-- Mathematics in mardown using `$$` -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+  CommonHTML: {
+    scale: 150
+  }
+});
 
   <link rel="stylesheet" href="{{ site.baseurl }}/styles.css">
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ site.baseurl }}/public/apple-touch-icon-precomposed.png">
