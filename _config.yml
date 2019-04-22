@@ -1,6 +1,9 @@
 # Permalinks
 permalink:           pretty
 
+# for comments.html in the _includes
+repo:                dannydenenberg/poole
+
 # Setup
 title:               Poole
 tagline:             The Jekyll Butler
