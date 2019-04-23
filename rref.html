@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>RREF</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  </head>
+  <body>
+    <h1>Enter your matrix</h1>
+    <!-- EX-matrix <p>
+      $$ \quad \begin{bmatrix} a & b \\ c & d \end{bmatrix} \quad$$
+    </p>-->
+
+    Row: <input type="text" name="" id="row" value="" size="3" /> x Col:<input
+      type="text"
+      name=""
+      id="col"
+      value=""
+      size="3"
+    />
+
+    <div id="mat"></div>
+
+    <!-- Button to solve -->
+    <button id="solve">Solve RREF</button>
+
+    <p><span id="solution"></span></p>
+
+    <script type="text/javascript">
+      var textSize = 4;
+      var row, col;
+
+      $("#row, #col").change(function() {
+        let node = document.getElementById("mat");
+        removeAllChildren(node);
+
+        row = document.getElementById("row").value;
+        col = document.getElementById("col").value;
+
+        makeMatrix(row, col, node);
+
+        console.log(`MATRIX ROWxCOL:${row}, ${col}`);
+      });
+
+      function removeAllChildren(node) {
+        while (node.hasChildNodes()) {
+          node.removeChild(node.lastChild);
+        }
+      }
+
+      // working
+      $("#mat").change(function() {
+        console.log("INPUTS MATRIX:");
+        console.table(inputsToMatrix());
+      });
+
+      // when the button is clicked, solve it
+      $("#solve").click(function() {
+        let solvedMatrix = reducedRowEchelonForm(inputsToMatrix());
+        arrayToDOM(solvedMatrix);
+        // let mathjax check for more typesetting it can do with latex even after the page loads
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+      });
+
+      function makeMatrix(r, c, div) {
+        for (var i = 0; i < r; i++) {
+          let p = document.createElement("p");
+          div.appendChild(p);
+          for (var j = 0; j < c; j++) {
+            let input = document.createElement("input");
+            input.size = textSize;
+
+            div.appendChild(input);
+          }
+        }
+      }
+
+      console.table(reducedRowEchelonForm([[1, 2, 3], [4, 5, 6]]));
+
+      function reducedRowEchelonForm(matrix) {
+        var knownPivotColumns = []; // this is our one piece of iffy state-keeping :(
+
+        // Copy the input matrix (reusing the variable name) so we have a local copy to work on
+        matrix = matrix.map(function(row) {
+          return row.slice();
+        });
+
+        // Now, go through the matrix and do the reduction.
+        // We're using forEach here, because we want to update the matrix
+        // in-place, whereas `map()` will work on a separate instance
+        matrix.forEach(function(row, rowIndex) {
+          // Find the row's pivot
+          // This is wrapped in an IIFE just for structure
+          var pivot = (function() {
+            // using a regular for-loop, since we may want to break out of it early
+            for (var i = 0, l = row.length; i < l; i++) {
+              if (!row[i] || knownPivotColumns[i]) {
+                continue;
+              } // skip column if it's zero or its index is taken
+              knownPivotColumns[i] = true; // "reserve" the column
+              return { index: i, value: row[i] }; // return the pivot data
+            }
+            return null; // no pivot found
+          })();
+
+          // if there's no pivot, there's nothing else to do for this row
+          if (!pivot) {
+            return;
+          }
+
+          // scale the row, if necessary
+          if (pivot.value !== 1) {
+            // using forEach as a "map in place" here
+            row.forEach(function(_, i) {
+              row[i] /= pivot.value;
+            });
+          }
+
+          // now reduce the other rows (calling them "siblings" here)
+          matrix.forEach(function(sibling) {
+            var siblingPivotValue = sibling[pivot.index];
+
+            if (sibling === row || siblingPivotValue === 0) {
+              return;
+            } // skip if possible
+
+            // subtract the sibling-pivot-scaled row from the sibling
+            // (another "forEach as map-in-place")
+            sibling.forEach(function(_, i) {
+              sibling[i] -= row[i] * siblingPivotValue;
+            });
+          });
+        });
+
+        return matrix;
+      }
+
+      // prints matrix to DOM
+      function arrayToDOM(m) {
+        let solution = document.getElementById("solution");
+        let text = "<br/>Solution:<br/>$$ \\begin{bmatrix} ";
+        for (let i = 0; i < m.length; i++) {
+          for (let k = 0; k < m[0].length; k++) {
+            text += m[i][k] + " ";
+            if (k != m[0].length - 1) {
+              text += "& ";
+            } else {
+              text += ` \\\\ `; // four `\` yields two `\` in actuality, b/c they are escape chars
+            }
+          }
+          //text += "<br/>";
+        }
+
+        text += " \\end{bmatrix}$$<br/>";
+        solution.innerHTML = text;
+      }
+      function inputsToMatrix() {
+        let mat = document.getElementById("mat").children;
+
+        let final = [];
+
+        let temp = [];
+
+        for (let index = 1; index < mat.length; index++) {
+          if (mat[index].tagName == "P") {
+            final.push(temp);
+            temp = [];
+          } else {
+            temp.push(parseInt(mat[index].value));
+          }
+        }
+
+        final.push(temp);
+
+        return final;
+      }
+    </script>
+  </body>
+</html>
+
